@@ -1,0 +1,19 @@
+<% if CultureLog.where(culture_id: reactor.cultures.pluck(:id)).any? %>
+  <div class="mt-3">
+    <h2 class="text-center mb-4">Galeria de Imagens</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+        <div class="card">
+          <img src="<%= image_path("Image#{reactor.id}-1.png") %>" class="card-img-top" alt="Imagem 1">
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card">
+          <img src="<%= image_path("Image#{reactor.id}-2.png") %>" class="card-img-top" alt="Imagem 2">
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,35 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Cadastro de PCP - Processo de Controle de Produção</h5>
+
+    <%= form_with(url: cultures_path) do |f| %>
+      <div class="col-12">
+        <label for="reactor" class="form-label">Reator</label>
+        <select class="form-select" id="reactor" name="reactor">
+          <%= @reactors.each do |reactor| %>
+            <option value="<%= reactor.id %>"><%= reactor.name %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="col-12 mt-2">
+        <label for="microorganism" class="form-label">Microorganismo</label>
+        <select class="form-select" id="microorganism" name="microorganism">
+          <%= @microorganisms.each do |reactor| %>
+            <option value="<%= reactor.id %>"><%= reactor.name %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="col-12 mt-2">
+        <label for="culture_end_date" class="form-label">Data final da Cultura</label>
+        <input type="date" class="form-control" id="culture_end_date" name="culture_end_date">
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="reset" class="btn btn-secondary">Cancelar</button>
+      </div>
+    <% end %>
+  </div>
+</div>

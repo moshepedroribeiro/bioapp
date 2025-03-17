@@ -1,0 +1,42 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Cadastro do Microorganismo</h5>
+
+    <%= form_with(url: microorganisms_path) do |f| %>
+      <div class="col-12">
+        <label for="name" class="form-label">Nome</label>
+        <input type="text" class="form-control" name="name" id="name">
+      </div>
+
+      <div class="col-12 mt-2">
+        <label for="code" class="form-label">Código</label>
+        <input type="text" class="form-control" name="code" id="code">
+      </div>
+
+      <div class="col-12 mt-2">
+        <label for="desired_pressure" class="form-label">Pressão desejada</label>
+        <input type="text" class="form-control" name="desired_pressure" id="desired_pressure">
+      </div>
+
+      <div class="col-12 mt-2">
+        <label for="desired_oxygen" class="form-label">Oxigênio desejado</label>
+        <input type="text" class="form-control" name="desired_oxygen" id="desired_oxygen">
+      </div>
+
+      <div class="col-12 mt-2">
+        <label for="desired_temperature" class="form-label">Temperatura desejada</label>
+        <input type="text" class="form-control" name="desired_temperature" id="desired_temperature">
+      </div>
+
+      <div class="col-12 mt-2">
+        <label for="desired_ph" class="form-label">pH desejado</label>
+        <input type="text" class="form-control" name="desired_ph" id="desired_ph">
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="reset" class="btn btn-secondary">Cancelar</button>
+      </div>
+    <% end %>
+  </div>
+</div>

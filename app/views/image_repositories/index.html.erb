@@ -1,0 +1,14 @@
+<div class="mt-2">
+  <%= form_with(url: image_repositories_path, method: :get, data: { turbo_stream: true, controller: 'auto-submit' }, class: 'col-4') do |f| %>
+    <%= f.select :reactor,
+                 options_for_select(@reactors.collect { |reactor| [ reactor.name, reactor.id ] }, params[:reactor]),
+                 {},
+                 class: 'form-select',
+                 data: { action: 'auto-submit#submit' }
+    %>
+  <% end %>
+</div>
+
+<div id="image-container">
+    <%= render 'image_items', reactor: @reactor %>
+</div>

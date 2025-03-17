@@ -1,0 +1,119 @@
+<div id="home-screen">
+  <div class="mt-3">
+    <div class="row">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <h5 class="card-title text-center">Contaminantes <span>| Risco</span></h5>
+
+                <div class="text-center">
+
+                  <% if @last_culture_log&.contaminants %>
+                    <img src="<%= image_path('negative.png') %>" width="50" height="50">
+                  <% else %>
+                    <img src="<%= image_path('accept.png') %>" width="50" height="50">
+                  <% end %>
+
+                </div>
+              </div>
+
+            </div>
+          </div><!-- End Sales Card -->
+
+          <!-- Revenue Card -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <h5 class="card-title text-center">População <span>| <%= @last_culture_log&.culture&.microorganism&.name %></span></h5>
+
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="ps-3">
+                    <h6 style="font-size: 36px;"><%= @last_culture_log&.concentration %> Mil</h6>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div><!-- End Revenue Card -->
+
+          <!-- Customers Card -->
+          <div class="col-xxl-4 col-xl-12">
+
+            <div class="card info-card customers-card">
+              <div class="card-body">
+                <h5 class="card-title text-center">Temperatura <span>| ºC</span></h5>
+
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="ps-3">
+                    <h6 style="font-size: 36px;"><%= @last_culture_log&.temperature %> ºC</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <h5 class="card-title text-center">Pressão <span>| Bar</span></h5>
+
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="ps-3">
+                    <h6 style="font-size: 36px;"><%= @last_culture_log&.pressure %> Bar</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <h5 class="card-title text-center">Oxigênio <span>| L</span></h5>
+
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="ps-3">
+                    <h6 style="font-size: 36px;"><%= @last_culture_log&.oxygen %> mg/L</h6>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-xl-12">
+
+            <div class="card info-card customers-card">
+              <div class="card-body">
+                <h5 class="card-title text-center">pH</h5>
+
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="ps-3">
+                    <h6 style="font-size: 36px;"><%= @last_culture_log&.ph %> pH</h6>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="text-center mt-3">Análise da bactéria <i><%= @last_culture_log&.culture&.microorganism&.name %></i></h3>
+
+  <div class="w-100" data-controller="chart">
+    <input type="hidden" data-chart-target="time" value="<%= @culture_logs_times %>">
+    <input type="hidden" data-chart-target="temperature" value="<%= @culture_logs_temperature %>">
+    <input type="hidden" data-chart-target="concentration" value="<%= @culture_logs_concentrations %>">
+
+    <div data-chart-target="chart"></div>
+  </div>
+</div>
