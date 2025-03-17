@@ -15,6 +15,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_17_005322) do
   enable_extension "plpgsql"
 
   create_table "culture_logs", force: :cascade do |t|
+    t.bigint "culture_id", null: false
     t.float "pressure", null: false
     t.float "oxygen", null: false
     t.float "temperature", null: false
@@ -23,6 +24,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_17_005322) do
     t.boolean "contaminants", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["culture_id"], name: "index_culture_logs_on_culture_id"
   end
 
   create_table "cultures", force: :cascade do |t|
@@ -59,6 +61,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_17_005322) do
     t.index ["code"], name: "index_reactors_on_code", unique: true
   end
 
+  add_foreign_key "culture_logs", "cultures"
   add_foreign_key "cultures", "microorganisms"
   add_foreign_key "cultures", "reactors"
 end
