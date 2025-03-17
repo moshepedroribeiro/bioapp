@@ -1,65 +1,58 @@
-# syntax = docker/dockerfile:1
+FROM ruby:3.3.6
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t my-app .
-# docker run -d -p 80:80 -p 443:443 --name my-app -e RAILS_MASTER_KEY=<value from config/master.key> my-app
+RUN mkdir -p /etc/nginx/ssl/ \
+    && openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048 \
+    && chmod 600 /etc/nginx/ssl/dhparam.pem
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
-ARG RUBY_VERSION=3.3.6
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+RUN apt clean \
+    && apt update -qq \
+    && apt install -y build-essential apt-utils libpq-dev sudo unzip gsfonts ghostscript libbz2-dev zlib1g-dev ocrmypdf tesseract-ocr-por poppler-utils nginx libvips \
+    && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
+    && rm /var/log/nginx/access.log \
+    && rm /var/log/nginx/error.log \
+    && rm /etc/nginx/sites-enabled/default \
+    && ln -s /dev/stdout /var/log/nginx/access.log \
+    && ln -s /dev/stderr /var/log/nginx/error.log \
+    && ln -s /rails/nginx.conf /etc/nginx/sites-enabled/ib \
+    && apt clean
 
-# Rails app lives here
 WORKDIR /rails
 
-# Install base packages
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+ARG UID=1001
+ARG GID=1002
 
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+RUN groupadd -g "${GID}" ruby \
+  && useradd --create-home --no-log-init -u "${UID}" -g "${GID}" ruby \
+  && chown ruby:ruby -R /rails \
+  && adduser ruby sudo \
+  && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Throw-away build stage to reduce size of final image
-FROM base AS build
+USER ruby
 
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git pkg-config && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/home/ruby/.bun/bin:${PATH}"
 
-# Install application gems
-COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+ENV RAILS_ENV=production
+ENV RACK_ENV=production
+ENV ON_PREMISE=1
 
-# Copy application code
-COPY . .
+RUN gem update --system
+RUN gem install bundler:2.5.6
+RUN bundle config --global frozen 1
+RUN bundle config set without 'development test'
 
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
+COPY --chown=ruby:ruby Gemfile* .ruby-version ./
+RUN bundle install --jobs 20 --retry 5
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+COPY --chown=ruby:ruby package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
+RUN bun install sass
 
+COPY --chown=ruby:ruby . .
+RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production bundle exec rails assets:precompile
 
-
-# Final stage for app image
-FROM base
-
-# Copy built artifacts: gems, application
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
-
-# Run and own only the runtime files as a non-root user for security
-RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER 1000:1000
+ENV RAILS_SOCKET=/rails/puma.sock
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
