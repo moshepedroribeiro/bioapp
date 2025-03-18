@@ -42,8 +42,9 @@ RUN bundle config --global frozen 1
 RUN bundle config set without 'development test'
 
 COPY --chown=ruby:ruby Gemfile* .ruby-version ./
+ENV BUNDLE_PATH=/usr/local/bundle
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --deployment --without development
+RUN bundle install
 
 COPY --chown=ruby:ruby package.json bun.lockb ./
 RUN bun install --frozen-lockfile
