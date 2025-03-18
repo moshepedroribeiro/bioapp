@@ -53,7 +53,6 @@ RUN bun install --frozen-lockfile
 
 RUN bun install sass
 
-RUN mkdir -p /rails/tmp/cache && chmod -R 777 /rails/tmp
 
 COPY --chown=ruby:ruby . .
 RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production bundle exec rails assets:precompile
