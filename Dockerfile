@@ -44,6 +44,8 @@ RUN bundle config set without 'development test'
 COPY --chown=ruby:ruby Gemfile* .ruby-version ./
 ENV BUNDLE_PATH=/usr/local/bundle
 COPY Gemfile Gemfile.lock ./
+RUN bundle config set deployment 'true'
+RUN bundle config set without 'development test'
 RUN bundle install
 
 COPY --chown=ruby:ruby package.json bun.lockb ./
