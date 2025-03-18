@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './app/services/telegram_message_service'
+# require './app/services/telegram_message_service'
 
 class TelegramController < ApplicationController
 
