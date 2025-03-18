@@ -9,8 +9,7 @@ services:
       RAILS_ENV: production
       BUNDLE_DEPLOYMENT: "1"
       BUNDLE_WITHOUT: development
-      RAILS_MASTER_KEY: 14a83b28bd82020d8767214b51bb252f
-      SECRET_KEY_BASE: 14a83b28bd82020d8767214b51bb252f
+      RAILS_MASTER_KEY: "14a83b28bd82020d8767214b51bb252f"
       DATABASE_URL: postgres://postgres:password@db:5432/bioapp
     ports:
       - "3000:3000"
