@@ -2,7 +2,7 @@ services:
   app:
     build: .
     container_name: bioapp-web
-    image: bioapp:0.0.1
+    image: moshepwribeiro/bioapp:0.0.1
     env_file:
       - .env
     environment:
