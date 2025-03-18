@@ -16,7 +16,10 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/rails
+      - ./storage:/rails/storage
+      - ./log:/rails/log
+      - rails_tmp:/rails/tmp
+      - .:/rails:ro
     restart: always
 
   db:
@@ -26,6 +29,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: bioapp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     restart: always
 
   nginx:
@@ -37,3 +42,7 @@ services:
       - "81:81"
       - "443:443"
     restart: always
+
+volumes:
+  postgres_data:
+  rails_tmp:

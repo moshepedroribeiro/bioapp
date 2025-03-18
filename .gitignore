@@ -37,6 +37,11 @@
 /app/assets/builds/application.css
 /app/assets/builds/application.js
 /app/assets/builds/application.js.map
+/.idea/.gitignore
+/.idea/bioapp.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
 /.idea/vcs.xml
 /.idea/.gitignore
 /.idea/bioapp.iml
